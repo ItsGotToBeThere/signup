@@ -6,7 +6,7 @@ function handle(){
         const username = usernameInput.value;
         const password = passwordInput.value;
     
-        const url = `https://wahoowanderings.co/user/signin/${username}/${password}`;
+        const url = `http://wahoo.us-east-1.elasticbeanstalk.com/user/signin/${username}/${password}`;
     
         var newTab = window.open(url, '_blank');
     
