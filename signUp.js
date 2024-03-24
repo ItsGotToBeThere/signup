@@ -6,7 +6,7 @@ document.addEventListener('keypress',function(event){
         const username = usernameInput.value
         const password = passwordInput.value
 
-        const url = `http://wahoo.us-east-1.elasticbeanstalk.com/user/addUser/${username}/${password}`;
+        const url = `wahoo.us-east-1.elasticbeanstalk.com/user/addUser/${username}/${password}`;
 
         let validity;
         let placesVisited;
