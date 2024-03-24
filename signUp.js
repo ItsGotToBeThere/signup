@@ -20,7 +20,7 @@ function handleSignUp(event) {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return response.text(); 
+      return response; 
     })
     .then(data => {
       if (data.trim() === 'false') {
