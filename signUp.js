@@ -32,10 +32,6 @@ function handleSignUp(event) {
         alert(`Sign-up failed: ${data.message || "Unknown error"}`); // Handle API error message
       }
     })
-    .catch(error => {
-      console.error("Error:", error);
-      alert("An error occurred during sign-up. Please try again later."); // User-friendly error message
-    });
 }
 
 document.addEventListener('keypress', function(event) {
