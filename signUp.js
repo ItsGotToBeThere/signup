@@ -3,7 +3,7 @@ const passwordInput = document.querySelector("#password");
 const signUpBTN = document.querySelector("#signUpBtn");
 
 function handleSignUp(event) {
-  event.preventDefault(); // Prevent default form submission behavior (if applicable)
+  event.preventDefault(); 
 
   const username = usernameInput.value;
   const password = passwordInput.value;
@@ -20,13 +20,13 @@ function handleSignUp(event) {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return response.json(); // Parse the JSON response
+      return response.text(); 
     })
     .then(data => {
-      if (data.exists === true) {
+      if (data.trim() === 'false') {
         alert(`Username "${username}" is already taken. Please choose a different one.`);
       } else {
-        localStorage.setItem('placesVisited', JSON.stringify([])); // Initialize empty placesVisited
+        localStorage.setItem('placesVisited', JSON.stringify([])); 
         localStorage.setItem('isLoggedIn', JSON.stringify(true));
         localStorage.setItem('username', username);
         window.location.href = 'https://wahoowanderings.co';
@@ -40,7 +40,7 @@ function handleSignUp(event) {
 
 document.addEventListener('keypress', function(event) {
   if (event.key === 'Enter') {
-    handleSignUp(event); // Pass the event object for potential form handling
+    handleSignUp(event); 
   }
 });
 
