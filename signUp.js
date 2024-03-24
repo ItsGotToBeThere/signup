@@ -1,39 +1,42 @@
 const usernameInput = document.querySelector("#username")
 const passwordInput = document.querySelector("#password")
+const signUpBTN = document.querySelector("#signUpBtn")
 
-document.addEventListener('keypress',function(event){
-    if (event.key=="Enter"){
-        const username = usernameInput.value
-        const password = passwordInput.value
-
-        const url = `wahoo.us-east-1.elasticbeanstalk.com/user/addUser/${username}/${password}`;
-
+function handle(){
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+    
+        const url = `https://wahoowanderings.co/user/signin/${username}/${password}`;
+    
+        var newTab = window.open(url, '_blank');
+    
         let validity;
         let placesVisited;
         var interval = setInterval(function () {
-            fetch(url)
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        validity = response.value;
+                        placesVisited = response.strings;
+    
+                        clearInterval(interval);
+                        newTab.close();
                     }
-                    throw new Error('Network response was not ok.');
-                })
-                .then(data => {
-                    validity = JSON.parse(data[0]);
-                    placesVisited = data.slice(1);
-                    clearInterval(interval);
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                });
+                }
+            };
+            xhr.send();
         }, 200);
-
-
-        if (validity===true){
-            localStorage.setItem('username',JSON.stringify(username))
-            localStorage.setItem('placesVisited',JSON.stringify(placesVisited))
-            localStorage.setItem('isLoggedIn',JSON.stringify(true))
-            window.location.href = 'https://wahoowanderings.co'
-        }
     }
+
+
+    
+document.addEventListener('keypress',function(event){
+    if (event.key==='Enter') handle()
 })
+
+
+
+signUpBTN.addEventListener('click',handle)
