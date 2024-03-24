@@ -1,46 +1,47 @@
-const usernameInput = document.querySelector("#username")
-const passwordInput = document.querySelector("#password")
-const signUpBTN = document.querySelector("#signUpBtn")
+const usernameInput = document.querySelector("#username");
+const passwordInput = document.querySelector("#password");
+const signUpBTN = document.querySelector("#signUpBtn");
 
-function handle(){
-        const username = usernameInput.value;
-        const password = passwordInput.value;
-    
-        const url = `http://wahoo.us-east-1.elasticbeanstalk.com/user/addUser/${username}/${password}`;
-    
-        var newTab = window.open(url, '_blank');
-    
-        let validity;
-        var interval = setInterval(function () {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        const response = JSON.parse(xhr.responseText);
-                        validity = response[0]
+function handleSignUp(event) {
+  event.preventDefault(); // Prevent default form submission behavior (if applicable)
 
+  const username = usernameInput.value;
+  const password = passwordInput.value;
 
-                        if (validity === 'true') {
-                            localStorage.setItem('placesVisited', JSON.stringify(placesVisited));
-                            localStorage.setItem('isLoggedIn', JSON.stringify(true));
-                            localStorage.setItem('username',username)
-                            window.location.href = 'https://wahoowanderings.co';
-                        }
-                        newTab.close();
-                    }
-                }
-            };
-            xhr.send();
-        }, 200);
-    }
+  if (!username || !password) {
+    alert("Please enter both username and password.");
+    return; // Early exit if fields are empty
+  }
 
+  const url = `http://wahoo.us-east-1.elasticbeanstalk.com/user/addUser/${username}/${password}`;
 
-    
-document.addEventListener('keypress',function(event){
-    if (event.key==='Enter') handle()
-})
+  fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json(); // Parse the JSON response
+    })
+    .then(data => {
+      if (data.success) { // Assuming the API response has a "success" property
+        localStorage.setItem('placesVisited', JSON.stringify([])); // Initialize empty placesVisited
+        localStorage.setItem('isLoggedIn', JSON.stringify(true));
+        localStorage.setItem('username', username);
+        window.location.href = 'https://wahoowanderings.co';
+      } else {
+        alert(`Sign-up failed: ${data.message || "Unknown error"}`); // Handle API error message
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("An error occurred during sign-up. Please try again later."); // User-friendly error message
+    });
+}
 
+document.addEventListener('keypress', function(event) {
+  if (event.key === 'Enter') {
+    handleSignUp(event); // Pass the event object for potential form handling
+  }
+});
 
-
-signUpBTN.addEventListener('click',handle)
+signUpBTN.addEventListener('click', handleSignUp);
