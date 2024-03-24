@@ -23,15 +23,19 @@ function handleSignUp(event) {
       return response.json(); // Parse the JSON response
     })
     .then(data => {
-      if (data.success) { // Assuming the API response has a "success" property
+      if (data.exists === true) {
+        alert(`Username "${username}" is already taken. Please choose a different one.`);
+      } else {
         localStorage.setItem('placesVisited', JSON.stringify([])); // Initialize empty placesVisited
         localStorage.setItem('isLoggedIn', JSON.stringify(true));
         localStorage.setItem('username', username);
         window.location.href = 'https://wahoowanderings.co';
-      } else {
-        alert(`Sign-up failed: ${data.message || "Unknown error"}`); // Handle API error message
       }
     })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Sign-up failed. Please try again later.');
+    });
 }
 
 document.addEventListener('keypress', function(event) {
